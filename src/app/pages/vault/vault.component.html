@@ -65,9 +65,9 @@
                 <th *ngIf="!isMobile"></th>
                 <th [nzWidth]="isMobile ? '100px': '100px'">{{ 'Name' | translate: lang:langPageName }}</th>
                 <th>{{ 'Staked' | translate: lang:langPageName }}</th>
-                <th>{{ 'Remaining' | translate: lang:langPageName }}</th>
                 <th>{{ 'Speed' | translate: lang:langPageName }}</th>
                 <th>{{ 'UnlockedAmount' | translate: lang:langPageName }}</th>
+                <th>{{ 'Remaining' | translate: lang:langPageName }}</th>
                 <th nzRight [nzWidth]="isMobile ? '152px': '350px'"></th>
               </tr>
             </thead>
@@ -87,15 +87,15 @@
                   </app-long-balance>
                 </td>
                 <td>
-                  <app-long-balance [balance]="item.remaining || '--'" [countInMillions]="true">
-                  </app-long-balance>
-                </td>
-                <td>
                   <app-long-balance [balance]="item.speed  || '--'">
                   </app-long-balance>
                 </td>
                 <td>
                   <app-long-balance [balance]="item.claimable  || '--'" [countInMillions]="true">
+                  </app-long-balance>
+                </td>
+                <td>
+                  <app-long-balance [balance]="item.remaining || '--'" [countInMillions]="true">
                   </app-long-balance>
                 </td>
                 <td nzRight class="unlock-zone-btn-block">
@@ -233,7 +233,7 @@
               <span
                 (click)="showStakingStake(item, item.balance, true)">{{ 'Stake' | translate: lang:langPageName }}</span>
               <span nz-tooltip
-                [nzTooltipTitle]="'ComingSoon' | translate: lang:'app'">{{ 'Unstake' | translate: lang:langPageName }}</span>
+                [nzTooltipTitle]="'o3UnstakeTip' | translate: lang:'vault'">{{ 'Unstake' | translate: lang:langPageName }}</span>
             </div>
           </div>
         </div>

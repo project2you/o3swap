@@ -76,8 +76,8 @@ const vault = {
     zh: '取消',
   },
   unlockO3Tip: {
-    en: 'Provide O3 liquidity on DEX to unlock your O3',
-    zh: '提供O3流动性以解锁O3',
+    en: 'Stake LP to unlock O3. See the recommended LP amount on unlock calculator.',
+    zh: '质押LP解锁O3。可在解锁计算器上查看建议的LP数量。',
   },
   Amount: {
     en: 'Amount',
@@ -132,6 +132,10 @@ const vault = {
   hours: {
     en: 'hours',
     zh: '小时',
+  },
+  o3UnstakeTip: {
+    en: 'Available around July 29, 2021',
+    zh: '2021/7/29 左右开放',
   },
 };
 
