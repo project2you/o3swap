@@ -171,12 +171,11 @@ export class LegacyLiquidityComponent implements OnInit, OnDestroy {
       !new BigNumber(this.LPToken.amount).isZero()
     ) {
       this.payAmount[index] = this.LPToken.amount;
-      this.removeLiquidityInputAmount[
-        index
-      ] = await this.apiService.getSingleOutGivenPoolIn(
-        this.addLiquidityTokens[index],
-        this.payAmount[index]
-      );
+      this.removeLiquidityInputAmount[index] =
+        await this.apiService.getSingleOutGivenPoolIn(
+          this.addLiquidityTokens[index],
+          this.payAmount[index]
+        );
     }
   }
 
@@ -243,6 +242,15 @@ export class LegacyLiquidityComponent implements OnInit, OnDestroy {
   //#region
   private async checkShowApprove(token: Token, amount): Promise<any> {
     const spender = ETH_CROSS_SWAP_CONTRACT_HASH[token.chain];
+
+    const allowance = await this.ethApiService.getAllowance(
+      token,
+      this.currentAddress,
+      spender
+    );
+    if (new BigNumber(allowance).comparedTo(new BigNumber(amount)) >= 0) {
+      return false;
+    }
     this.transactions.forEach((item) => {
       if (
         item.transactionType === TransactionType.approve &&
@@ -256,17 +264,7 @@ export class LegacyLiquidityComponent implements OnInit, OnDestroy {
         return 'error';
       }
     });
-
-    const allowance = await this.ethApiService.getAllowance(
-      token,
-      this.currentAddress,
-      spender
-    );
-    if (new BigNumber(allowance).comparedTo(new BigNumber(amount)) >= 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
   checkInputAmountDecimal(amount: string, decimals: number): boolean {
     const decimalPart = amount && amount.split('.')[1];
@@ -374,9 +372,8 @@ export class LegacyLiquidityComponent implements OnInit, OnDestroy {
     this.tokenBalance.HECO = state.hecoBalances;
     this.addLiquidityTokens.forEach((item, index) => {
       if (this.tokenBalance[item.chain][item.assetID]) {
-        this.addLiquidityTokens[index].amount = this.tokenBalance[item.chain][
-          item.assetID
-        ].amount;
+        this.addLiquidityTokens[index].amount =
+          this.tokenBalance[item.chain][item.assetID].amount;
       } else {
         if (
           (item.chain === 'ETH' && this.ethAccountAddress) ||

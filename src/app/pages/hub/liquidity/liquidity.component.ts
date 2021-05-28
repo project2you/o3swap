@@ -225,9 +225,8 @@ export class LiquidityComponent implements OnInit, OnDestroy {
 
   async maxAddLiquidityInput(index: number): Promise<void> {
     if (!new BigNumber(this.addLiquidityTokens[index].amount).isNaN()) {
-      this.addLiquidityInputAmount[index] = this.addLiquidityTokens[
-        index
-      ].amount;
+      this.addLiquidityInputAmount[index] =
+        this.addLiquidityTokens[index].amount;
       this.receiveAmount[index] = await this.apiService.getPoolOutGivenSingleIn(
         this.addLiquidityTokens[index],
         this.addLiquidityInputAmount[index]
@@ -246,12 +245,11 @@ export class LiquidityComponent implements OnInit, OnDestroy {
       !new BigNumber(this.LPToken.amount).isZero()
     ) {
       this.payAmount[index] = this.LPToken.amount;
-      this.removeLiquidityInputAmount[
-        index
-      ] = await this.apiService.getSingleOutGivenPoolIn(
-        this.addLiquidityTokens[index],
-        this.payAmount[index]
-      );
+      this.removeLiquidityInputAmount[index] =
+        await this.apiService.getSingleOutGivenPoolIn(
+          this.addLiquidityTokens[index],
+          this.payAmount[index]
+        );
       this.removePolyFee[index] = await this.apiService.getFromEthPolyFee(
         this.LPToken,
         this.addLiquidityTokens[index]
@@ -443,6 +441,15 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     address: string
   ): Promise<any> {
     const spender = ETH_CROSS_SWAP_CONTRACT_HASH[token.chain];
+
+    const allowance = await this.ethApiService.getAllowance(
+      token,
+      address,
+      spender
+    );
+    if (new BigNumber(allowance).comparedTo(new BigNumber(amount)) >= 0) {
+      return false;
+    }
     this.transactions.forEach((item) => {
       if (
         item.transactionType === TransactionType.approve &&
@@ -456,17 +463,7 @@ export class LiquidityComponent implements OnInit, OnDestroy {
         return 'error';
       }
     });
-
-    const allowance = await this.ethApiService.getAllowance(
-      token,
-      address,
-      spender
-    );
-    if (new BigNumber(allowance).comparedTo(new BigNumber(amount)) >= 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
   getFromTokenAddress(token: Token): string {
     switch (token.chain) {
@@ -620,9 +617,8 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     this.tokenBalance.HECO = state.hecoBalances;
     this.addLiquidityTokens.forEach((item, index) => {
       if (this.tokenBalance[item.chain][item.assetID]) {
-        this.addLiquidityTokens[index].amount = this.tokenBalance[item.chain][
-          item.assetID
-        ].amount;
+        this.addLiquidityTokens[index].amount =
+          this.tokenBalance[item.chain][item.assetID].amount;
       } else {
         if (
           (item.chain === 'ETH' && this.ethAccountAddress) ||

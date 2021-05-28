@@ -180,12 +180,8 @@ export class VaultComponent implements OnInit, OnDestroy {
         this.vaultEthWalletApiService.getO3StakingStaked(item) || '--',
         this.vaultEthWalletApiService.getO3StakingSharePerBlock(item) || '0',
       ]).then((res) => {
-        [
-          item.balance,
-          item.totalStaking,
-          item.staked,
-          item.sharePerBlock,
-        ] = res;
+        [item.balance, item.totalStaking, item.staked, item.sharePerBlock] =
+          res;
         item.apy = this.getStakingAYP(item);
       });
     });
@@ -200,12 +196,8 @@ export class VaultComponent implements OnInit, OnDestroy {
         this.vaultEthWalletApiService.getO3StakingStaked(item) || '--',
         this.vaultEthWalletApiService.getO3StakingSharePerBlock(item) || '0',
       ]).then((res) => {
-        [
-          item.balance,
-          item.totalStaking,
-          item.staked,
-          item.sharePerBlock,
-        ] = res;
+        [item.balance, item.totalStaking, item.staked, item.sharePerBlock] =
+          res;
         item.apy = this.getStakingAYP(item);
       });
     });
@@ -235,9 +227,8 @@ export class VaultComponent implements OnInit, OnDestroy {
   async initAridrop(): Promise<void> {
     const address = this.vaultWallet?.address || '';
     for (let i = 0; i < this.airdropNumber; i++) {
-      const airdropList = await this.vaultEthWalletApiService.getAirdropListJson(
-        i
-      );
+      const airdropList =
+        await this.vaultEthWalletApiService.getAirdropListJson(i);
       const addressAirdropInfo =
         airdropList[
           Object.keys(airdropList).find(
@@ -619,6 +610,14 @@ export class VaultComponent implements OnInit, OnDestroy {
     inputAmount: string,
     spender: string
   ): Promise<any> {
+    const balance = await this.ethApiService.getAllowance(
+      token,
+      address,
+      spender
+    );
+    if (new BigNumber(balance).comparedTo(new BigNumber(inputAmount)) >= 0) {
+      return false;
+    }
     this.transactions.forEach((item) => {
       if (
         item.transactionType === TransactionType.approve &&
@@ -632,16 +631,7 @@ export class VaultComponent implements OnInit, OnDestroy {
         return 'error';
       }
     });
-    const balance = await this.ethApiService.getAllowance(
-      token,
-      address,
-      spender
-    );
-    if (new BigNumber(balance).comparedTo(new BigNumber(inputAmount)) >= 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
   checkBalance(balance: string, input: string): boolean {
     const balanceNumber = new BigNumber(balance);

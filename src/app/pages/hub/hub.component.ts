@@ -468,6 +468,16 @@ export class HubComponent implements OnInit, OnDestroy {
   }
   async checkShowApprove(): Promise<any> {
     const spender = ETH_CROSS_SWAP_CONTRACT_HASH[this.fromToken.chain];
+    const balance = await this.ethApiService.getAllowance(
+      this.fromToken,
+      this.fromAddress,
+      spender
+    );
+    if (
+      new BigNumber(balance).comparedTo(new BigNumber(this.inputAmount)) >= 0
+    ) {
+      return false;
+    }
     this.transactions.forEach((item) => {
       if (
         item.transactionType === TransactionType.approve &&
@@ -481,19 +491,7 @@ export class HubComponent implements OnInit, OnDestroy {
         return 'error';
       }
     });
-
-    const balance = await this.ethApiService.getAllowance(
-      this.fromToken,
-      this.fromAddress,
-      spender
-    );
-    if (
-      new BigNumber(balance).comparedTo(new BigNumber(this.inputAmount)) >= 0
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
   checkInputAmountDecimal(): boolean {
     const decimalPart = this.inputAmount && this.inputAmount.split('.')[1];

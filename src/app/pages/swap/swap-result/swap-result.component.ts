@@ -765,9 +765,7 @@ export class SwapResultComponent implements OnInit, OnDestroy {
         this.fromToken.assetID ===
           WETH_ASSET_HASH[this.fromToken.chain].assetID &&
         this.toToken.assetID === ETH_SOURCE_ASSET_HASH) ||
-      (WETH_ASSET_HASH[this.toToken.chain] &&
-        this.toToken.assetID === WETH_ASSET_HASH[this.toToken.chain].assetID &&
-        this.fromToken.assetID === ETH_SOURCE_ASSET_HASH)
+      this.fromToken.assetID === ETH_SOURCE_ASSET_HASH
     ) {
       this.commonService.log('check show approve return');
       return false;
@@ -785,6 +783,17 @@ export class SwapResultComponent implements OnInit, OnDestroy {
     ) {
       spender = POLY_WRAPPER_CONTRACT_HASH[this.fromToken.chain];
     }
+
+    const balance = await this.ethApiService.getAllowance(
+      this.fromToken,
+      this.fromAddress,
+      spender
+    );
+    if (
+      new BigNumber(balance).comparedTo(new BigNumber(this.inputAmount)) >= 0
+    ) {
+      return false;
+    }
     this.transactions.forEach((item) => {
       if (
         item.transactionType === TransactionType.approve &&
@@ -798,19 +807,7 @@ export class SwapResultComponent implements OnInit, OnDestroy {
         return 'error';
       }
     });
-
-    const balance = await this.ethApiService.getAllowance(
-      this.fromToken,
-      this.fromAddress,
-      spender
-    );
-    if (
-      new BigNumber(balance).comparedTo(new BigNumber(this.inputAmount)) >= 0
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
   getSwapPathFun(): void {
     this.chooseSwapPath = null;
