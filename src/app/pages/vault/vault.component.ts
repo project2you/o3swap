@@ -45,21 +45,22 @@ interface State {
   styleUrls: ['./vault.component.scss', './mobile.scss'],
 })
 export class VaultComponent implements OnInit, OnDestroy {
+  currentChain = 'ETH';
   langPageName = 'vault';
   langUnScribe: Unsubscribable;
   language$: Observable<any>;
   lang: string;
 
   isMobile = false;
-  private vault$: Observable<any>;
-  private vaultUnScribe: Unsubscribable;
-  private vaultWallet: VaultWallet;
   isCanClick = true;
 
   ratesUnScribe: Unsubscribable;
   rates$: Observable<any>;
   rates = {};
 
+  private vault$: Observable<any>;
+  private vaultUnScribe: Unsubscribable;
+  private vaultWallet: VaultWallet;
   private appUnScribe: Unsubscribable;
   private app$: Observable<any>;
   private transactions: MyTransaction[];
@@ -107,6 +108,9 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.initO3Data();
     this.vaultUnScribe = this.vault$.subscribe((state) => {
       this.vaultWallet = state.vaultWallet;
+      if (state.vaultWallet) {
+        this.currentChain = this.vaultWallet.chain;
+      }
       this.initO3Data();
       this.initAridrop();
     });

@@ -1,7 +1,7 @@
 <section class="page-container">
   <div class="detail">
     <div class="item-container row-1">
-      <div class="item-group item-total">
+      <div class="item-group item-total" [ngClass]="{eth: currentChain ==='ETH'}">
         <div class="group-title">{{ 'Total' | translate: lang:langPageName }}</div>
         <div class="group-content"><span>
             <app-long-balance [balance]="o3Total || '--'" [decimals]="2">
@@ -122,7 +122,6 @@
         </div>
       </div>
     </div>
-
     <div class="item-container row-3">
       <div class="left">
         <div class="title">
@@ -184,7 +183,7 @@
         </div>
 
       </div>
-      <div class="right">
+      <div class="token-staking-box">
         <div class="title">
           <div class="name">
             {{ 'StakeTokenToEarnO3' | translate: lang:langPageName }}
@@ -235,6 +234,59 @@
               <span nz-tooltip
                 [nzTooltipTitle]="'o3UnstakeTip' | translate: lang:'vault'">{{ 'Unstake' | translate: lang:langPageName }}</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item-container row-4" *ngIf="false">
+      <div class="title">
+        <div class="name">
+          Icing Sugar Mining Pool
+        </div>
+      </div>
+      <div class="group-container token-staking-box">
+        <div class="item-group" *ngFor="let item of o3StakingTokenList">
+          <div class="name">
+            <img [src]="item.logo" alt="" class="token-img">
+            <div>
+              {{ item.symbol }}
+              <p class="claimable-box">{{ 'Claimable' | translate: lang:langPageName }} O3: &nbsp;
+                <span class="value">
+                  <app-long-balance [balance]="item.profit  || '--'" [countInMillions]="true">
+                  </app-long-balance>
+                </span><span class="claim-btn"
+                  (click)="claimProfit(item)">{{ 'Claim' | translate: lang:langPageName }}</span>
+              </p>
+            </div>
+
+          </div>
+          <div class="detail-container">
+            <div class="detail-item">
+              <div class="value">
+                <app-long-balance [balance]="item.staked  || '--'" [decimals]="2" [countInMillions]="true">
+                </app-long-balance>
+              </div>
+              <div class="name">{{ 'Staked' | translate: lang:langPageName }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="value">
+                <app-long-balance [balance]="item.totalStaking  || '--'" [decimals]="2" [countInMillions]="true">
+                </app-long-balance>
+              </div>
+              <div class="name">{{ 'TotalStaking' | translate: lang:langPageName }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="value">
+                <app-long-balance [balance]="item.apy || '--'" [decimals]="2">
+                </app-long-balance>%
+              </div>
+              <div class="name">APY%</div>
+            </div>
+          </div>
+          <div class="stake">
+            <span
+              (click)="showStakingStake(item, item.balance, true)">{{ 'Stake' | translate: lang:langPageName }}</span>
+            <span>{{ 'Unstake' | translate: lang:langPageName }}</span>
           </div>
         </div>
       </div>
