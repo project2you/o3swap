@@ -123,9 +123,6 @@ export class CommonService {
       ) {
         return tokenRate.price;
       }
-      if (!tokenRate.asset_id) {
-        return tokenRate.price;
-      }
     }
     return;
   }

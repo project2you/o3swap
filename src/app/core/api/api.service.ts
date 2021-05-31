@@ -115,7 +115,7 @@ export class ApiService {
       .pipe(
         map((res: CommonHttpResponse) => {
           if (res.status === 'success') {
-            return res.data;
+            return this.handleNativeTokenRate(res.data);
           }
         })
       )
@@ -827,6 +827,13 @@ export class ApiService {
       }
     }
     return arr;
+  }
+  handleNativeTokenRate(rates): any {
+    rates.neo2.neo.asset_id = NEO_TOKEN.assetID;
+    rates.eth.eth.asset_id = ETH_SOURCE_ASSET_HASH;
+    rates.bsc.bnb.asset_id = ETH_SOURCE_ASSET_HASH;
+    rates.heco.ht.asset_id = ETH_SOURCE_ASSET_HASH;
+    return rates;
   }
   //#endregion
 }
