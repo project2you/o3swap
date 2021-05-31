@@ -16,7 +16,7 @@ interface State {
 @Injectable()
 export class O3EthWalletApiService {
   private myWalletName: EthWalletName = 'O3';
-  public isMobileO3Wallet = false;
+  public isMobileWallet = false;
 
   private swap$: Observable<any>;
   private walletName = { ETH: '', BSC: '', HECO: '' };
@@ -44,7 +44,11 @@ export class O3EthWalletApiService {
       this.walletName.HECO = state.hecoWalletName;
     });
     if ((window as any).ethereum) {
-      this.isMobileO3Wallet = (window as any).ethereum.isO3Wallet || false;
+      this.isMobileWallet =
+        (window as any).ethereum.isO3Wallet ||
+        (window as any).ethereum.isMathWallet ||
+        (window as any).ethereum.isTokenPocket ||
+        false;
     }
   }
 

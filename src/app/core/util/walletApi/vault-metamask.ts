@@ -48,9 +48,23 @@ export class VaultdMetaMaskWalletApiService {
       this.vaultWallet = state.vaultWallet;
     });
     if ((window as any).ethereum) {
-      this.myWalletName = (window as any).ethereum.isO3Wallet
-        ? 'O3'
-        : 'MetaMask';
+      switch (true) {
+        case (window as any).ethereum.isO3Wallet === true: {
+          this.myWalletName = 'O3';
+          break;
+        }
+        case (window as any).ethereum.isMathWallet === true: {
+          this.myWalletName = 'MathWallet';
+          break;
+        }
+        case (window as any).ethereum.isTokenPocket === true: {
+          this.myWalletName = 'TokenPocket';
+          break;
+        }
+        default: {
+          this.myWalletName = 'MetaMask';
+        }
+      }
     }
   }
 

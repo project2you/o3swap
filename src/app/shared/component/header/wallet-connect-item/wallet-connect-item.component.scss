@@ -1,6 +1,7 @@
 @import "src/styles/variable.scss";
 ul.wallets {
   padding-left: 70px;
+  overflow: auto;
   li {
     .disabled {
       opacity: 0.5;

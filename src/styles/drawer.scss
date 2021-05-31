@@ -1,6 +1,12 @@
 .custom-drawer {
   min-height: 400px;
   max-height: 80%;
+  &.connect-wallet {
+    ul.wallets {
+      height: 250px;
+      overflow: auto;
+    }
+  }
   &.swap-token {
     height: 540px !important;
   }
@@ -24,7 +30,8 @@
       line-height: 1;
       padding: 18px 0 0;
       height: 100%;
-      .header, .mobile-header {
+      .header,
+      .mobile-header {
         padding: 0 5%;
         height: 60px;
         line-height: 60px;
