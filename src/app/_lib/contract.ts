@@ -1,5 +1,13 @@
 import { NETWORK } from './network';
-import { LP_TOKENS, O3_TOKEN } from './token';
+import {
+  LP_TOKENS,
+  MASK_TOKEN,
+  MATIC_TOKEN,
+  O3_TOKEN,
+  ONEINCH_TOKEN,
+  SKL_TOKEN,
+  WETH_TOKEN,
+} from './token';
 
 export const NEO_NNEO_CONTRACT_HASH =
   NETWORK === 'MainNet'
@@ -69,14 +77,23 @@ export const AGGREGATOR_CONTRACT = {
 };
 
 export const O3STAKING_CONTRACT = {
-  [O3_TOKEN.assetID]:
-    NETWORK === 'MainNet'
-      ? '0x0423f3b26593db401a3382b483981e619C808dfC'
-      : '0x97058684943932e0158cC60F33a4a98f17066927',
-  [LP_TOKENS.filter((item) => item.chain === 'ETH')[0].assetID]:
-    NETWORK === 'MainNet'
-      ? '0x0eE932A6E89619DD865221754813c5627d00AdB3'
-      : '0x9A7Ae672cf00304c9CD54AC217a90B16e6EF4749',
+  ETH: {
+    [O3_TOKEN.assetID]:
+      NETWORK === 'MainNet'
+        ? '0x0423f3b26593db401a3382b483981e619C808dfC'
+        : '0x97058684943932e0158cC60F33a4a98f17066927',
+    [LP_TOKENS.filter((item) => item.chain === 'ETH')[0].assetID]:
+      NETWORK === 'MainNet'
+        ? '0x0eE932A6E89619DD865221754813c5627d00AdB3'
+        : '0x9A7Ae672cf00304c9CD54AC217a90B16e6EF4749',
+    [WETH_TOKEN.assetID]: '0x33bFCD95b7C5A83a71ce6d579fdD651aaA8F8f28',
+    [ONEINCH_TOKEN.assetID]: '0xE6D6E0924005d2F3c977Efc768bED7a121670859',
+    [MATIC_TOKEN.assetID]: '0xe0EBdb726eC3563aBEA57BF6d2388960D71481fe',
+    [SKL_TOKEN.assetID]: '0x415dbcd56206fa190b3be8572f3089198eac7526',
+    [MASK_TOKEN.assetID]: '0x247E63265B360cD389e1194Ec9561fA9aB26dcBE',
+  },
+  BSC: {},
+  HECO: {},
 };
 
 export const ETH_AIRDROP_CLAIM_CONTRACT = [

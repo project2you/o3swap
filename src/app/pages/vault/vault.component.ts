@@ -75,7 +75,10 @@ export class VaultComponent implements OnInit, OnDestroy {
   airdropO3 = ['0', '0'];
   airdropNumber = 2;
   stakeUnlockTokenList: any[] = UNLOCK_LP_TOKENS;
-  o3StakingTokenList: any[] = TOKEN_STAKING_TOKENS;
+  o3StakingTokenList: any[] = [O3_TOKEN];
+  tokenStakingTokenList: any[] = TOKEN_STAKING_TOKENS[this.currentChain].filter(
+    (item) => item.assetID !== O3_TOKEN.assetID
+  );
   lpstakingTokenList: any[] = LP_STAKING_TOKENS;
 
   private loader: NzModalRef = null;
@@ -175,6 +178,22 @@ export class VaultComponent implements OnInit, OnDestroy {
     });
     // o3 Staking
     this.o3StakingTokenList.forEach(async (item: any) => {
+      Promise.all([
+        this.swapService.getEthBalancByHash(
+          item,
+          this.vaultWallet?.address || ''
+        ) || '--',
+        this.vaultEthWalletApiService.getO3StakingTotalStaing(item) || '--',
+        this.vaultEthWalletApiService.getO3StakingStaked(item) || '--',
+        this.vaultEthWalletApiService.getO3StakingSharePerBlock(item) || '0',
+      ]).then((res) => {
+        [item.balance, item.totalStaking, item.staked, item.sharePerBlock] =
+          res;
+        item.apy = this.getStakingAYP(item);
+      });
+    });
+    // token Staking
+    this.tokenStakingTokenList.forEach(async (item: any) => {
       Promise.all([
         this.swapService.getEthBalancByHash(
           item,
@@ -363,7 +382,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     if (this.vaultEthWalletApiService.checkNetwork(token) === false) {
       return;
     }
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     let modal;
     if (!this.commonService.isMobileWidth()) {
       modal = this.modal.create({
@@ -495,7 +514,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     if (claimable.isNaN() || claimable.isZero()) {
       return;
     }
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     this.loader = this.commonService.loading(TransactionType.claim, {
       symbol1: token.symbol,
       value1: token.profit,
@@ -560,7 +579,8 @@ export class VaultComponent implements OnInit, OnDestroy {
       priceRatio.isNaN() ||
       priceRatio.comparedTo(0) === 0 ||
       !priceRatio.isFinite() ||
-      result.isNaN()
+      result.isNaN() ||
+      !result.isFinite()
     ) {
       return '--';
     } else {

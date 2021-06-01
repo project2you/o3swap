@@ -99,7 +99,8 @@ export class VaultEthWalletApiService {
     address?: string
   ): Promise<any> {
     const json = await this.getContractJson('o3Staking');
-    const o3StakingContractHash = O3STAKING_CONTRACT[token.assetID];
+    const o3StakingContractHash =
+      O3STAKING_CONTRACT[token.chain][token.assetID];
     const o3StakingContract = new this.web3.eth.Contract(
       json,
       o3StakingContractHash
@@ -137,7 +138,8 @@ export class VaultEthWalletApiService {
   }
   async o3StakingUnStake(token: Token, inputAmount: string): Promise<any> {
     const json = await this.getContractJson('o3Staking');
-    const o3StakingContractHash = O3STAKING_CONTRACT[token.assetID];
+    const o3StakingContractHash =
+      O3STAKING_CONTRACT[token.chain][token.assetID];
     const o3StakingContract = new this.web3.eth.Contract(
       json,
       o3StakingContractHash
@@ -179,7 +181,8 @@ export class VaultEthWalletApiService {
     address?: string
   ): Promise<any> {
     const json = await this.getContractJson('o3Staking');
-    const o3StakingContractHash = O3STAKING_CONTRACT[token.assetID];
+    const o3StakingContractHash =
+      O3STAKING_CONTRACT[token.chain][token.assetID];
     const o3StakingContract = new this.web3.eth.Contract(
       json,
       o3StakingContractHash
@@ -213,7 +216,7 @@ export class VaultEthWalletApiService {
   }
   async getO3StakingTotalStaing(token: Token): Promise<string> {
     let params;
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     const json = await this.getContractJson('o3Staking');
     const o3Contract = new this.web3.eth.Contract(json, contractHash);
     const data = await o3Contract.methods.totalStaked().encodeABI();
@@ -233,7 +236,7 @@ export class VaultEthWalletApiService {
   }
   async getO3StakingSharePerBlock(token: Token): Promise<string> {
     let params;
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     const json = await this.getContractJson('o3Staking');
     const o3Contract = new this.web3.eth.Contract(json, contractHash);
     const data = await o3Contract.methods.getSharePerBlock().encodeABI();
@@ -259,7 +262,7 @@ export class VaultEthWalletApiService {
       return;
     }
     let params;
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     const json = await this.getContractJson('o3Staking');
     const o3Contract = new this.web3.eth.Contract(json, contractHash);
     const data = await o3Contract.methods
@@ -284,7 +287,7 @@ export class VaultEthWalletApiService {
       return;
     }
     let params;
-    const contractHash = O3STAKING_CONTRACT[token.assetID];
+    const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     const json = await this.getContractJson('o3Staking');
     const o3Contract = new this.web3.eth.Contract(json, contractHash);
     const data = await o3Contract.methods

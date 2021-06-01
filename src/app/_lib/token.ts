@@ -110,6 +110,49 @@ export const O3_TOKEN: Token = {
 };
 //#endregion
 
+//#region staking token
+export const WETH_TOKEN = {
+  assetID: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  symbol: 'WETH',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/weth.png',
+};
+export const ONEINCH_TOKEN = {
+  assetID: '0x111111111117dC0aa78b770fA6A738034120C302',
+  symbol: '1INCH',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/1inch.png',
+};
+export const MATIC_TOKEN = {
+  assetID: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
+  symbol: 'MATIC',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/matic.png',
+};
+export const SKL_TOKEN = {
+  assetID: '0x00c83aecc790e8a4453e5dd3b0b4b3680501a7a7',
+  symbol: 'SKL',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/skl.png',
+};
+export const MASK_TOKEN = {
+  assetID: '0x69af81e73a73b40adf4f3d4223cd9b1ece623074',
+  symbol: 'MASK',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/mask.png',
+};
+//#endregion
+
 export const UNLOCK_LP_TOKENS: Token[] = [
   {
     assetID:
@@ -131,7 +174,18 @@ export const UNLOCK_LP_TOKENS: Token[] = [
     ],
   },
 ];
-export const TOKEN_STAKING_TOKENS: Token[] = [O3_TOKEN];
+export const TOKEN_STAKING_TOKENS = {
+  ETH: [
+    O3_TOKEN,
+    WETH_TOKEN,
+    ONEINCH_TOKEN,
+    MATIC_TOKEN,
+    SKL_TOKEN,
+    MASK_TOKEN,
+  ],
+  BSC: [],
+  HECO: [],
+};
 
 export const LP_STAKING_TOKENS: Token[] = [
   {

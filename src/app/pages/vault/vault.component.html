@@ -238,21 +238,22 @@
         </div>
       </div>
     </div>
-    <div class="item-container row-4" *ngIf="false">
+    <div class="item-container row-4" *ngIf="tokenStakingTokenList.length > 0">
       <div class="title">
         <div class="name">
           Icing Sugar Mining Pool
         </div>
       </div>
       <div class="group-container token-staking-box">
-        <div class="item-group" *ngFor="let item of o3StakingTokenList">
+        <div class="item-group" *ngFor="let item of tokenStakingTokenList">
           <div class="name">
             <img [src]="item.logo" alt="" class="token-img">
             <div>
               {{ item.symbol }}
               <p class="claimable-box">{{ 'Claimable' | translate: lang:langPageName }} O3: &nbsp;
                 <span class="value">
-                  <app-long-balance [balance]="item.profit  || '--'" [countInMillions]="true">
+                  <app-long-balance [length]="9" [decimals]="2" [balance]="item.profit  || '--'"
+                    [countInMillions]="true">
                   </app-long-balance>
                 </span><span class="claim-btn"
                   (click)="claimProfit(item)">{{ 'Claim' | translate: lang:langPageName }}</span>

@@ -420,7 +420,6 @@
       .group-container {
         width: 100%;
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
         .item-group {
           width: calc((100% - 30px) / 3);

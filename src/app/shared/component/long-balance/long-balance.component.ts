@@ -38,13 +38,15 @@ export class LongBalanceComponent implements OnInit, OnChanges {
     const dataGroup = stringValue.split('.');
     if (this.countInMillions) {
       if (dataGroup[0].length > 9) {
-        const millonNumber = dataGroup[0].slice(0, -9) + '.' + dataGroup[0].slice(-9);
+        const millonNumber =
+          dataGroup[0].slice(0, -9) + '.' + dataGroup[0].slice(-9);
         this.showTooltip = true;
         this.displayBalance = new BigNumber(millonNumber).dp(2).toFixed() + 'B';
         return;
       }
       if (dataGroup[0].length > 6) {
-        const millonNumber = dataGroup[0].slice(0, -6) + '.' + dataGroup[0].slice(-6);
+        const millonNumber =
+          dataGroup[0].slice(0, -6) + '.' + dataGroup[0].slice(-6);
         this.showTooltip = true;
         this.displayBalance = new BigNumber(millonNumber).dp(2).toFixed() + 'M';
         return;
@@ -74,7 +76,13 @@ export class LongBalanceComponent implements OnInit, OnChanges {
       }
     } else {
       if (this.decimals !== -1) {
-        this.balance = new BigNumber(this.balance).dp(this.decimals).toFixed();
+        const tempBalance = new BigNumber(this.balance)
+          .dp(this.decimals)
+          .toFixed();
+        if (this.balance !== tempBalance) {
+          this.showTooltip = true;
+          this.displayBalance = tempBalance;
+        }
       }
     }
   }
