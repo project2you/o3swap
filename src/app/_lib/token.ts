@@ -151,6 +151,14 @@ export const MASK_TOKEN = {
   chain: 'ETH',
   logo: '/assets/images/tokens/mask.png',
 };
+export const PERP_TOKEN = {
+  assetID: '0xbC396689893D065F41bc2C6EcbeE5e0085233447',
+  symbol: 'PERP',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/perp.png',
+};
 //#endregion
 
 export const UNLOCK_LP_TOKENS: Token[] = [
@@ -180,8 +188,8 @@ export const TOKEN_STAKING_TOKENS = {
     WETH_TOKEN,
     ONEINCH_TOKEN,
     MATIC_TOKEN,
-    SKL_TOKEN,
     MASK_TOKEN,
+    PERP_TOKEN,
   ],
   BSC: [],
   HECO: [],
