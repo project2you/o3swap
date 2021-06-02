@@ -188,6 +188,7 @@ export const TOKEN_STAKING_TOKENS = {
     WETH_TOKEN,
     ONEINCH_TOKEN,
     MATIC_TOKEN,
+    SKL_TOKEN,
     MASK_TOKEN,
     PERP_TOKEN,
   ],
