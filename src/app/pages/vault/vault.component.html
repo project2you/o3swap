@@ -128,6 +128,10 @@
           <div class="name">
             {{ 'StakeLPToEarnO3' | translate: lang:langPageName }}
           </div>
+          <div class="group-icon">
+            <img nz-tooltip [nzTooltipTitle]="'stakeLPTip' | translate: lang:langPageName" nzTooltipPlacement="right"
+              src="/assets/images/dashboard/doubt.png" alt="">
+          </div>
         </div>
         <div class="group-container">
           <div class="item-group" *ngFor="let item of lpstakingTokenList">
@@ -188,6 +192,10 @@
           <div class="name">
             {{ 'StakeTokenToEarnO3' | translate: lang:langPageName }}
           </div>
+          <div class="group-icon">
+            <img nz-tooltip [nzTooltipTitle]="'stakeTokenTip' | translate: lang:langPageName" nzTooltipPlacement="right"
+              src="/assets/images/dashboard/doubt.png" alt="">
+          </div>
         </div>
         <div class="group-container">
           <div class="item-group" *ngFor="let item of o3StakingTokenList">
@@ -242,6 +250,10 @@
       <div class="title">
         <div class="name">
           Icing Sugar Mining Pool
+        </div>
+        <div class="group-icon">
+          <img nz-tooltip [nzTooltipTitle]="'icingSugarPoolTips' | translate: lang:langPageName"
+            nzTooltipPlacement="right" src="/assets/images/dashboard/doubt.png" alt="">
         </div>
       </div>
       <div class="group-container token-staking-box">

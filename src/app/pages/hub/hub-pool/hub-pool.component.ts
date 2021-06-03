@@ -142,11 +142,11 @@ export class HubPoolComponent implements OnInit, OnDestroy {
         this.LPToken.staked,
         this.LPToken.sharePerBlock,
       ] = res;
-      this.LPAPY = this.getStakingAYP(this.LPToken);
+      this.LPAPY = this.getStakingAPY(this.LPToken);
     });
   }
 
-  getStakingAYP(token: any): string {
+  getStakingAPY(token: any): string {
     const tokenPrice = this.getTokenPrice(token);
     const O3TokenPrice = this.getTokenPrice(O3_TOKEN);
     const yearSecond = new BigNumber('31536000');

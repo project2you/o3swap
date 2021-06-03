@@ -71,7 +71,6 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
     this.swapService
       .getEthBalancByHash(O3_TOKEN, this.LPToken.assetID)
       .then((res) => {
-        console.log(res);
         this.lpO3Balance = new BigNumber(res);
       });
     this.rpcApiService
@@ -87,7 +86,6 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
         this.LPToken
       )
       .then((res) => {
-        console.log(res);
         this.lpTotalSupply = new BigNumber(res);
       });
     this.ratesUnScribe = this.rates$.subscribe((state) => {

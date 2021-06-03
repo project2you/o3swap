@@ -79,6 +79,18 @@ const vault = {
     en: 'Stake LP to unlock O3. See the recommended LP amount on unlock calculator.',
     zh: '质押LP解锁O3。可在解锁计算器上查看建议的LP数量。',
   },
+  stakeLPTip: {
+    en: 'Event ending time: Approx. July 29, 2021 All rewards need to be unlocked',
+    zh: '活动结束时间：约 2021/7/29。所有奖励都需要解锁',
+  },
+  stakeTokenTip: {
+    en: 'Event ending time: Approx. July 29, 2021 All rewards need to be unlocked. Unstake is not available during event.',
+    zh: '活动结束时间：约 2021/7/29。所有奖励都需要解锁。活动期间无法取出质押。',
+  },
+  icingSugarPoolTips: {
+    en: 'Event ending time: Approx. June 07, 2021 All rewards need to be unlocked',
+    zh: '活动结束时间：约 2021/6/7。所有奖励都需要解锁',
+  },
   Amount: {
     en: 'Amount',
     zh: '数量',
