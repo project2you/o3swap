@@ -74,7 +74,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   totalProfit = '--';
   airdropO3 = ['0', '0'];
   airdropNumber = 2;
-  stakeUnlockTokenList: any[] = UNLOCK_LP_TOKENS;
+  stakeUnlockTokenList: any[] = UNLOCK_LP_TOKENS[this.currentChain];
   o3StakingTokenList: any[] = [O3_TOKEN];
   tokenStakingTokenList: any[] = TOKEN_STAKING_TOKENS[this.currentChain].filter(
     (item) => item.assetID !== O3_TOKEN.assetID

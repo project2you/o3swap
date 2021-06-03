@@ -6,11 +6,14 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
+import { RpcApiService } from '@core/api/rpc.service';
 import { CommonService } from '@core/util/common.service';
+import { SwapService } from '@core/util/swap.service';
 import { O3_TOKEN, Token } from '@lib';
 import { Store } from '@ngrx/store';
 import BigNumber from 'bignumber.js';
 import { Unsubscribable, Observable } from 'rxjs';
+import Web3 from 'web3';
 
 interface State {
   rates: any;
@@ -46,10 +49,17 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
   private unlockBlockGap = new BigNumber(15000);
   private standerLp = new BigNumber('0.387298334620740688');
   private standerO3Amount = new BigNumber('300000');
+  private lpTotalSupply = new BigNumber('0.387298334620740688');
+  private lpO3Balance = new BigNumber('300000');
   private blockTime = new BigNumber(13.2);
   private K = new BigNumber(20).div(this.standerLp); // O3/LP/Block;
 
-  constructor(store: Store<State>, private commonService: CommonService) {
+  constructor(
+    store: Store<State>,
+    private commonService: CommonService,
+    private rpcApiService: RpcApiService,
+    private swapService: SwapService
+  ) {
     this.language$ = store.select('language');
     this.rates$ = store.select('rates');
     this.langUnScribe = this.language$.subscribe((state) => {
@@ -58,6 +68,28 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.swapService
+      .getEthBalancByHash(O3_TOKEN, this.LPToken.assetID)
+      .then((res) => {
+        console.log(res);
+        this.lpO3Balance = new BigNumber(res);
+      });
+    this.rpcApiService
+      .getEthCall(
+        [
+          this.commonService.getSendTransactionParams(
+            undefined,
+            this.LPToken.assetID,
+            this.getTotalSupplyData()
+          ),
+          'latest',
+        ],
+        this.LPToken
+      )
+      .then((res) => {
+        console.log(res);
+        this.lpTotalSupply = new BigNumber(res);
+      });
     this.ratesUnScribe = this.rates$.subscribe((state) => {
       this.rates = state.rates;
     });
@@ -90,9 +122,8 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
       return;
     }
     this.o3Value = lpBigNumber
-      .div(this.standerLp)
-      .times(this.standerO3Amount)
-      .div(2)
+      .div(this.lpTotalSupply)
+      .times(this.lpO3Balance)
       .dp(8)
       .toFixed();
     this.calculateO3Price();
@@ -105,9 +136,8 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
       return;
     }
     this.lpValue = o3BigNumber
-      .div(this.standerO3Amount)
-      .times(2)
-      .times(this.standerLp)
+      .div(this.lpO3Balance)
+      .times(this.lpTotalSupply)
       .dp(8)
       .toFixed();
     const lockNum = new BigNumber(this.lockedValue);
@@ -156,5 +186,13 @@ export class VaultUnlockCalculatorComponent implements OnInit, OnDestroy {
     window.open(
       `https://app.uniswap.org/#/add/v2/${this.LPToken.pairTokens[0]}/${this.LPToken.pairTokens[1]}`
     );
+  }
+
+  private getTotalSupplyData(): string {
+    return new Web3().eth.abi.encodeFunctionSignature({
+      name: 'totalSupply',
+      type: 'function',
+      inputs: [],
+    });
   }
 }

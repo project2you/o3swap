@@ -70,6 +70,25 @@ export const ETH_PUSDT_ASSET = {
     decimals: NETWORK === 'MainNet' ? 8 : 18,
   },
 };
+export const UNI_LP_TOKEN: Token = {
+  assetID:
+    NETWORK === 'MainNet'
+      ? '0x4B8852E4747B8a7d4CAf0440e4e3397032a6723D'
+      : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
+  symbol: 'UNI-LP',
+  decimals: 18,
+  amount: '0',
+  chain: 'ETH',
+  logo: '/assets/images/tokens/lp-eth.png',
+  pairTokens: [
+    '0xEe9801669C6138E84bD50dEB500827b776777d28',
+    '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+  ],
+  pairLogos: [
+    '/assets/images/tokens/o3.png',
+    'https://img.o3.network/logo/eth/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
+  ],
+};
 // NEO swap standard token(mainnet)
 export const FUSDT_ASSET_HASH =
   NETWORK === 'MainNet'
@@ -161,27 +180,11 @@ export const PERP_TOKEN = {
 };
 //#endregion
 
-export const UNLOCK_LP_TOKENS: Token[] = [
-  {
-    assetID:
-      NETWORK === 'MainNet'
-        ? '0x4B8852E4747B8a7d4CAf0440e4e3397032a6723D'
-        : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
-    symbol: 'UNI-LP',
-    decimals: 18,
-    amount: '0',
-    chain: 'ETH',
-    logo: '/assets/images/tokens/lp-eth.png',
-    pairTokens: [
-      '0xEe9801669C6138E84bD50dEB500827b776777d28',
-      '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-    ],
-    pairLogos: [
-      '/assets/images/tokens/o3.png',
-      'https://img.o3.network/logo/eth/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
-    ],
-  },
-];
+export const UNLOCK_LP_TOKENS = {
+  ETH: [UNI_LP_TOKEN],
+  BSC: [],
+  HECO: [],
+};
 export const TOKEN_STAKING_TOKENS = {
   ETH: [
     O3_TOKEN,
