@@ -225,9 +225,9 @@ export class VaultComponent implements OnInit, OnDestroy {
       });
     });
     let tempTotalProfit = new BigNumber('0');
-    const earnO3TokenList = this.lpstakingTokenList.concat(
-      this.o3StakingTokenList
-    );
+    const earnO3TokenList = this.lpstakingTokenList
+      .concat(this.o3StakingTokenList)
+      .concat(this.tokenStakingTokenList);
     for (const [index, item] of earnO3TokenList.entries()) {
       item.profit =
         (await this.vaultEthWalletApiService.getO3StakingTotalProfit(item)) ||
@@ -516,7 +516,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     }
     const contractHash = O3STAKING_CONTRACT[token.chain][token.assetID];
     this.loader = this.commonService.loading(TransactionType.claim, {
-      symbol1: token.symbol,
+      symbol1: O3_TOKEN.symbol,
       value1: token.profit,
     });
     this.vaultEthWalletApiService

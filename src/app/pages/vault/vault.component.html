@@ -299,7 +299,8 @@
           <div class="stake">
             <span
               (click)="showStakingStake(item, item.balance, true)">{{ 'Stake' | translate: lang:langPageName }}</span>
-            <span>{{ 'Unstake' | translate: lang:langPageName }}</span>
+            <span
+              (click)="showStakingStake(item, item.staked, false)">{{ 'Unstake' | translate: lang:langPageName }}</span>
           </div>
         </div>
       </div>
