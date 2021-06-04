@@ -20,11 +20,17 @@
     margin-top: 15px;
     padding: 0 40px;
     width: 940px;
-    background: #252525;
     border-radius: 20px;
-    background: url("/assets/images/hub/eth-pool.png") right bottom no-repeat;
-    background-size: 120px 100px;
-    background-color: #252525;
+    &.eth {
+      background: url("/assets/images/hub/eth-pool.png") right bottom no-repeat;
+      background-size: 120px 100px;
+      background-color: #252525;
+    }
+    &.bsc {
+      background: url("/assets/images/hub/bsc-pool.png") right bottom no-repeat;
+      background-size: 120px 100px;
+      background-color: #252525;
+    }
     .pool-detail {
       padding: 24px 0;
       display: flex;

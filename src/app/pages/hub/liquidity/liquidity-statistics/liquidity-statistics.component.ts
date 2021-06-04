@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '@core';
-import { ETH_PUSDT_ASSET, Token, USD_TOKENS } from '@lib';
+import { Token, USD_TOKENS } from '@lib';
 import { Store } from '@ngrx/store';
 import BigNumber from 'bignumber.js';
 import { Unsubscribable, Observable, interval } from 'rxjs';
+import { POOL_LIST } from 'src/app/_lib/pool';
 
 interface State {
   language: any;
@@ -15,13 +17,15 @@ interface State {
   styleUrls: ['./liquidity-statistics.component.scss', './mobile.scss'],
 })
 export class LiquidityStatisticsComponent implements OnInit, OnDestroy {
-  public USDTToken: Token = USD_TOKENS.find(
+  private poolId = 1;
+  private pool = POOL_LIST.find((item) => item.poolId === this.poolId);
+  public ETHWrappedToken: Token = USD_TOKENS.find(
     (item) => item.symbol.indexOf('USDT') >= 0
   );
-  public BUSDToken: Token = USD_TOKENS.find(
+  public BSCWrappedToken: Token = USD_TOKENS.find(
     (item) => item.symbol.indexOf('BUSD') >= 0
   );
-  public HUSDToken: Token = USD_TOKENS.find(
+  public HECOWrappedToken: Token = USD_TOKENS.find(
     (item) => item.symbol.indexOf('HUSD') >= 0
   );
 
@@ -30,7 +34,7 @@ export class LiquidityStatisticsComponent implements OnInit, OnDestroy {
   private language$: Observable<any>;
   public lang: string;
 
-  public pusdtBalance = {
+  public poolAssetBalance = {
     ALL: '',
     ETH: { value: '', percentage: '0' },
     BSC: { value: '', percentage: '0' },
@@ -38,11 +42,16 @@ export class LiquidityStatisticsComponent implements OnInit, OnDestroy {
   };
   private getPusdtInterval: Unsubscribable;
 
-  constructor(private store: Store<State>, private apiService: ApiService) {
+  constructor(
+    private store: Store<State>,
+    private apiService: ApiService,
+    private aRoute: ActivatedRoute
+  ) {
     this.language$ = store.select('language');
     this.langUnScribe = this.language$.subscribe((state) => {
       this.lang = state.language;
     });
+    this.initPool();
   }
   ngOnDestroy(): void {
     if (this.langUnScribe) {
@@ -60,41 +69,58 @@ export class LiquidityStatisticsComponent implements OnInit, OnDestroy {
     });
   }
 
+  private initPool(): void {
+    this.poolId = Number(this.aRoute.snapshot.queryParamMap.get('poolId'));
+    this.pool = POOL_LIST.find((item) => item.poolId === this.poolId);
+    this.ETHWrappedToken = this.pool.wrappedTokens.find(
+      (item) => item.chain === 'ETH'
+    );
+    this.BSCWrappedToken = this.pool.wrappedTokens.find(
+      (item) => item.chain === 'BSC'
+    );
+    this.HECOWrappedToken = this.pool.wrappedTokens.find(
+      (item) => item.chain === 'HECO'
+    );
+  }
+
   async getPusdtBalance(): Promise<void> {
-    this.pusdtBalance.ETH.value = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.ETH.assetID,
-      ETH_PUSDT_ASSET.ETH.decimals
+    this.poolAssetBalance.ETH.value = await this.apiService.getPUsdtBalance(
+      this.pool.curveAssets.ETH.assetID,
+      this.pool.curveAssets.ETH.decimals,
+      this.poolId
     );
-    this.pusdtBalance.BSC.value = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.BSC.assetID,
-      ETH_PUSDT_ASSET.BSC.decimals
+    this.poolAssetBalance.BSC.value = await this.apiService.getPUsdtBalance(
+      this.pool.curveAssets.BSC.assetID,
+      this.pool.curveAssets.BSC.decimals,
+      this.poolId
     );
-    this.pusdtBalance.HECO.value = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.HECO.assetID,
-      ETH_PUSDT_ASSET.HECO.decimals
+    this.poolAssetBalance.HECO.value = await this.apiService.getPUsdtBalance(
+      this.pool.curveAssets.HECO.assetID,
+      this.pool.curveAssets.HECO.decimals,
+      this.poolId
     );
-    this.pusdtBalance.ALL = new BigNumber(this.pusdtBalance.ETH.value)
-      .plus(new BigNumber(this.pusdtBalance.BSC.value))
-      .plus(new BigNumber(this.pusdtBalance.HECO.value))
+    this.poolAssetBalance.ALL = new BigNumber(this.poolAssetBalance.ETH.value)
+      .plus(new BigNumber(this.poolAssetBalance.BSC.value))
+      .plus(new BigNumber(this.poolAssetBalance.HECO.value))
       .toFixed();
-    this.pusdtBalance.ETH.percentage = new BigNumber(
-      this.pusdtBalance.ETH.value
+    this.poolAssetBalance.ETH.percentage = new BigNumber(
+      this.poolAssetBalance.ETH.value
     )
-      .dividedBy(new BigNumber(this.pusdtBalance.ALL))
+      .dividedBy(new BigNumber(this.poolAssetBalance.ALL))
       .times(100)
       .dp(3)
       .toFixed();
-    this.pusdtBalance.BSC.percentage = new BigNumber(
-      this.pusdtBalance.BSC.value
+    this.poolAssetBalance.BSC.percentage = new BigNumber(
+      this.poolAssetBalance.BSC.value
     )
-      .dividedBy(new BigNumber(this.pusdtBalance.ALL))
+      .dividedBy(new BigNumber(this.poolAssetBalance.ALL))
       .times(100)
       .dp(3)
       .toFixed();
-    this.pusdtBalance.HECO.percentage = new BigNumber(
-      this.pusdtBalance.HECO.value
+    this.poolAssetBalance.HECO.percentage = new BigNumber(
+      this.poolAssetBalance.HECO.value
     )
-      .dividedBy(new BigNumber(this.pusdtBalance.ALL))
+      .dividedBy(new BigNumber(this.poolAssetBalance.ALL))
       .times(100)
       .dp(3)
       .toFixed();

@@ -13,7 +13,6 @@ import {
   CHAIN_TOKENS,
   NETWORK,
   POLY_HOST,
-  ETH_PUSDT_ASSET,
   SWAP_CONTRACT_CHAIN_ID,
   POLY_POOL_ADDRESS,
   ETH_SOURCE_ASSET_HASH,
@@ -38,6 +37,7 @@ import { CommonService } from '../util/common.service';
 import { SwapService } from '../util/swap.service';
 import { Store } from '@ngrx/store';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { CURVE_POOL_ASSET, POOL_LIST } from 'src/app/_lib/pool';
 
 interface State {
   tokens: any;
@@ -274,8 +274,8 @@ export class ApiService {
     inputAmount: string,
     poolId: number = 1
   ): Promise<string> {
-    const fromPUsdt = ETH_PUSDT_ASSET[fromToken.chain].assetID;
-    const toPUsdt = ETH_PUSDT_ASSET[toToken.chain].assetID;
+    const fromPUsdt = CURVE_POOL_ASSET[poolId][fromToken.chain].assetID;
+    const toPUsdt = CURVE_POOL_ASSET[poolId][toToken.chain].assetID;
     const amount = this.commonService.decimalToInteger(
       inputAmount,
       fromToken.decimals
@@ -403,8 +403,11 @@ export class ApiService {
     amount: string,
     poolId: number = 1
   ): Promise<string> {
-    const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
-    const usdtLpToken = LP_TOKENS.find((item) => item.chain === 'ETH');
+    const poolPUsdtHash = CURVE_POOL_ASSET[poolId][fromToken.chain].assetID;
+    const pool = POOL_LIST[poolId];
+    const usdtLpToken = LP_TOKENS[poolId].find(
+      (item) => item.chain === pool.chain
+    );
     amount = new BigNumber(amount).shiftedBy(fromToken.decimals).toFixed();
     return this.http
       .get(
@@ -433,8 +436,11 @@ export class ApiService {
     amount: string,
     poolId: number = 1
   ): Promise<string> {
-    const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
-    const usdtLpToken = LP_TOKENS.find((item) => item.chain === 'ETH');
+    const poolPUsdtHash = CURVE_POOL_ASSET[poolId][fromToken.chain].assetID;
+    const pool = POOL_LIST[poolId];
+    const usdtLpToken = LP_TOKENS[poolId].find(
+      (item) => item.chain === pool.chain
+    );
     amount = new BigNumber(amount).shiftedBy(fromToken.decimals).toFixed();
     return this.http
       .get(
@@ -463,8 +469,11 @@ export class ApiService {
     amount: string,
     poolId: number = 1
   ): Promise<string> {
-    const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
-    const usdtToken = USD_TOKENS.find((item) => item.chain === fromToken.chain);
+    const poolPUsdtHash = CURVE_POOL_ASSET[poolId][fromToken.chain].assetID;
+    const pool = POOL_LIST[poolId];
+    const usdtToken = pool.wrappedTokens.find(
+      (item) => item.chain === fromToken.chain
+    );
     amount = new BigNumber(amount).shiftedBy(18).toFixed();
     return this.http
       .get(
@@ -735,8 +744,8 @@ export class ApiService {
     inputAmount: string,
     poolId: number = 1
   ): Promise<AssetQueryResponse> {
-    const fromPUsdt = ETH_PUSDT_ASSET[fromToken.chain].assetID;
-    const toPUsdt = ETH_PUSDT_ASSET[toToken.chain].assetID;
+    const fromPUsdt = CURVE_POOL_ASSET[poolId][fromToken.chain].assetID;
+    const toPUsdt = CURVE_POOL_ASSET[poolId][toToken.chain].assetID;
     const amount = this.commonService.decimalToInteger(
       inputAmount,
       fromToken.decimals

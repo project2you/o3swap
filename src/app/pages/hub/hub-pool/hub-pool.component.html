@@ -1,6 +1,7 @@
 <div class="group-container pool">
   <div class="header">{{ 'CrossChainPool' | translate: lang:langPageName }}</div>
-  <div class="group-item">
+  <div class="group-item" *ngFor="let pool of poolList"
+    [ngClass]="{eth: pool.chain === 'ETH', bsc: pool.chain === 'BSC'}">
     <div class="pool-detail">
       <div class="list">
         <div class="item">
@@ -32,15 +33,17 @@
       </div>
       <div class="right">
         <div>
-          <button class="btn-primary btn deposit-btn" [routerLink]="['/hub/liquidity', 'add']">
+          <button class="btn-primary btn deposit-btn" [routerLink]="['/hub/liquidity', 'add']"
+            [queryParams]="{poolId: pool.poolId}">
             {{ 'Deposit' | translate: lang:langPageName }}
           </button>
           <button class="btn-primary btn withdrawal-btn" [routerLink]="['/hub/liquidity', 'remove']">
             {{ 'Withdraw' | translate: lang:langPageName }}
           </button>
         </div>
-        <div class="legacy">
-          <button class="btn-primary btn withdrawal-btn legacy" routerLink="/hub/legacy-liquidity/remove">
+        <div class="legacy" *ngIf="pool.poolId === 1">
+          <button class="btn-primary btn withdrawal-btn legacy" routerLink="/hub/legacy-liquidity/remove"
+            [queryParams]="{poolId: pool.poolId}">
             {{ 'WithdrawLegacyLP' | translate: lang:langPageName }}
           </button>
           <img nz-tooltip [nzTooltipTitle]="'LegacyLPTip' | translate: lang:'liquidity'" nzTooltipPlacement="bottom"

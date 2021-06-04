@@ -103,7 +103,7 @@ export class LegacyLiquidityComponent implements OnInit, OnDestroy {
     this.ratesUnScribe = this.rates$.subscribe((state) => {
       this.rates = state.rates;
     });
-    this.LPTokens = JSON.parse(JSON.stringify(LP_TOKENS));
+    this.LPTokens = JSON.parse(JSON.stringify(LP_TOKENS[1]));
     this.swapUnScribe = this.swap$.subscribe((state: SwapStateType) => {
       this.ethAccountAddress = state.ethAccountAddress;
       this.bscAccountAddress = state.bscAccountAddress;

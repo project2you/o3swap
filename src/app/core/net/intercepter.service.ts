@@ -55,7 +55,11 @@ export class HttpInterceptor implements NgHttpInterceptor {
   }
 
   private checkStatus(ev: HttpResponseBase): any {
-    if ((ev.status >= 200 && ev.status < 300) || ev.status === 400) {
+    if (
+      (ev.status >= 200 && ev.status < 300) ||
+      ev.status === 400 ||
+      ev.status === 0
+    ) {
       return;
     }
     const errortext = CODE_MESSAGE[ev.status] || ev.statusText;

@@ -54,7 +54,7 @@ export class EthApiService {
     private o3EthWalletApiService: O3EthWalletApiService,
     private metaMaskWalletApiService: MetaMaskWalletApiService,
     private vaultEthWalletApiService: VaultEthWalletApiService,
-    private apiService: ApiService,
+    private apiService: ApiService
   ) {
     this.swap$ = store.select('swap');
     this.swap$.subscribe((state) => {
@@ -85,7 +85,7 @@ export class EthApiService {
     const json = await this.swapService.getSwapJson('wEth');
     const swapContract = new this.web3.eth.Contract(
       json,
-      WETH_ASSET_HASH[fromToken.chain].assetID
+      '0xa2D7dfE65E9f1CF3F0d8feB3368673214422470e'
     );
     const data = swapContract.methods.deposit().encodeABI();
     const value = new BigNumber(inputAmount)
@@ -96,7 +96,7 @@ export class EthApiService {
       params: [
         this.commonService.getSendTransactionParams(
           fromAddress,
-          WETH_ASSET_HASH[fromToken.chain].assetID,
+          '0xa2D7dfE65E9f1CF3F0d8feB3368673214422470e',
           data,
           value
         ),
@@ -787,7 +787,8 @@ export class EthApiService {
     address: string,
     toChainId: number,
     receiveAmount: string,
-    fee: string
+    fee: string,
+    poolId: number = 1
   ): Promise<string> {
     this.commonService.log('add liquidity');
     const json = await this.swapService.getSwapJson('swapper');
@@ -798,7 +799,7 @@ export class EthApiService {
     const bigNumberPolyFee = new BigNumber(fee).shiftedBy(18).dp(0).toFixed();
     const params = {
       fromAssetHash: this.commonService.add0xHash(fromToken.assetID),
-      toPoolId: 1,
+      toPoolId: poolId,
       toChainId,
       toAddress: address,
       amount: new BigNumber(inputAmount)
@@ -867,7 +868,8 @@ export class EthApiService {
     address: string,
     toChainId: number,
     receiveAmount: string,
-    fee: string
+    fee: string,
+    poolId: number = 1
   ): Promise<string> {
     this.commonService.log('remove liquidity');
     const json = await this.swapService.getSwapJson('swapper');
@@ -878,7 +880,7 @@ export class EthApiService {
     const bigNumberPolyFee = new BigNumber(fee).shiftedBy(18).dp(0).toFixed();
     const params = {
       fromAssetHash: this.commonService.add0xHash(fromToken.assetID),
-      toPoolId: 1,
+      toPoolId: poolId,
       toChainId,
       toAssetHash: this.commonService.add0xHash(toToken.assetID),
       toAddress: address,

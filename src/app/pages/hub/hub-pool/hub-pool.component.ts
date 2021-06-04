@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiService,
   CommonService,
@@ -10,12 +11,12 @@ import {
   Token,
   LP_TOKENS,
   USD_TOKENS,
-  ETH_PUSDT_ASSET,
   CommonHttpResponse,
 } from '@lib';
 import { Store } from '@ngrx/store';
 import BigNumber from 'bignumber.js';
 import { Unsubscribable, Observable, interval } from 'rxjs';
+import { POOL_LIST } from 'src/app/_lib/pool';
 import { VaultWallet } from 'src/app/_lib/vault';
 
 interface State {
@@ -30,6 +31,7 @@ interface State {
   styleUrls: ['./hub-pool.component.scss', './mobile.scss'],
 })
 export class HubPoolComponent implements OnInit, OnDestroy {
+  public poolList = POOL_LIST;
   public langPageName = 'hub';
   private langUnScribe: Unsubscribable;
   private language$: Observable<any>;
@@ -43,20 +45,20 @@ export class HubPoolComponent implements OnInit, OnDestroy {
   private vault$: Observable<any>;
   private vaultWallet: VaultWallet;
 
-  private LPToken: any = LP_TOKENS.filter((item) => item.chain === 'ETH')[0];
-  public totalVolume = '--';
-  public LPAPY = '--';
+  private LPToken: any = [];
+  public totalVolume = [];
+  public LPAPY = [];
 
   public allUsdtBalance: string;
   private getallUsdtInterval: Unsubscribable;
   public dailyVolume: string;
-
   constructor(
     private store: Store<State>,
     private vaultEthWalletApiService: VaultEthWalletApiService,
     private commonService: CommonService,
     private swapService: SwapService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private aRoute: ActivatedRoute
   ) {
     this.language$ = store.select('language');
     this.langUnScribe = this.language$.subscribe((state) => {
@@ -89,10 +91,9 @@ export class HubPoolComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initAPY();
-    this.getAllUsdtBalance();
     this.getDailyVolume();
     this.getallUsdtInterval = interval(15000).subscribe(() => {
-      this.getAllUsdtBalance();
+      this.getDailyVolume();
     });
   }
 
@@ -101,48 +102,38 @@ export class HubPoolComponent implements OnInit, OnDestroy {
       if (res.status === 'success') {
         this.totalVolume = res.data.swap_vol_total;
         this.dailyVolume = res.data.swap_vol_24h;
+        this.allUsdtBalance = res.data.pool_tvl;
       }
     });
   }
 
-  async getAllUsdtBalance(): Promise<void> {
-    const usdtBalance = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.ETH.assetID,
-      ETH_PUSDT_ASSET.ETH.decimals
-    );
-    const busdBalance = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.BSC.assetID,
-      ETH_PUSDT_ASSET.BSC.decimals
-    );
-    const husdBalance = await this.apiService.getPUsdtBalance(
-      ETH_PUSDT_ASSET.HECO.assetID,
-      ETH_PUSDT_ASSET.HECO.decimals
-    );
-    this.allUsdtBalance = new BigNumber(usdtBalance)
-      .plus(new BigNumber(busdBalance))
-      .plus(new BigNumber(husdBalance))
-      .toFixed();
-  }
-
   initAPY(): void {
-    Promise.all([
-      this.swapService.getEthBalancByHash(
-        this.LPToken,
-        this.vaultWallet?.address || ''
-      ) || '--',
-      this.vaultEthWalletApiService.getO3StakingTotalStaing(this.LPToken) ||
-        '--',
-      this.vaultEthWalletApiService.getO3StakingStaked(this.LPToken) || '--',
-      this.vaultEthWalletApiService.getO3StakingSharePerBlock(this.LPToken) ||
-        '0',
-    ]).then((res) => {
-      [
-        this.LPToken.balance,
-        this.LPToken.totalStaking,
-        this.LPToken.staked,
-        this.LPToken.sharePerBlock,
-      ] = res;
-      this.LPAPY = this.getStakingAPY(this.LPToken);
+    this.poolList.forEach((pool, index) => {
+      this.LPToken[index] = LP_TOKENS[pool.poolId].find(
+        (item) => item.chain === pool.chain
+      );
+      Promise.all([
+        this.swapService.getEthBalancByHash(
+          this.LPToken[index],
+          this.vaultWallet?.address || ''
+        ) || '--',
+        this.vaultEthWalletApiService.getO3StakingTotalStaing(
+          this.LPToken[index]
+        ) || '--',
+        this.vaultEthWalletApiService.getO3StakingStaked(this.LPToken[index]) ||
+          '--',
+        this.vaultEthWalletApiService.getO3StakingSharePerBlock(
+          this.LPToken[index]
+        ) || '0',
+      ]).then((res) => {
+        [
+          this.LPToken[index].balance,
+          this.LPToken[index].totalStaking,
+          this.LPToken[index].staked,
+          this.LPToken[index].sharePerBlock,
+        ] = res;
+        this.LPAPY[index] = this.getStakingAPY(this.LPToken[index]);
+      });
     });
   }
 
@@ -188,7 +179,7 @@ export class HubPoolComponent implements OnInit, OnDestroy {
       return resultPrice.toFixed();
     } else {
       if (
-        LP_TOKENS.filter((item) => {
+        LP_TOKENS[1].filter((item) => {
           return this.commonService.judgeAssetHash(token.assetID, item.assetID);
         }).length > 0
       ) {

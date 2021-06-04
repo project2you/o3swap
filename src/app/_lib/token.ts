@@ -13,6 +13,11 @@ export interface Token {
 }
 export type CHAINS = 'ALL' | 'NEO' | 'ETH' | 'BSC' | 'HECO';
 
+export interface CurveAsset {
+  assetID: string;
+  decimals: number;
+}
+
 //#region some token
 export const SOURCE_TOKEN_SYMBOL = {
   ETH: 'ETH',
@@ -47,29 +52,7 @@ export const WETH_ASSET_HASH = {
         : '0x2550d9439a1c19f91f19316b5bd343180c12e315',
   },
 };
-export const ETH_PUSDT_ASSET = {
-  ETH: {
-    assetID:
-      NETWORK === 'MainNet'
-        ? '0x061a87Aac7695b9cf9482043175fd3bE3374AB66'
-        : '0x63799851696CDE43c2305dccd7208a03272BA591',
-    decimals: 6,
-  },
-  BSC: {
-    assetID:
-      NETWORK === 'MainNet'
-        ? '0xBFC0457548BB90D54123a71a7310BaDa8f4662c0'
-        : '0x78Ec09343122737925f9839d7794de49FeB6B083',
-    decimals: 18,
-  },
-  HECO: {
-    assetID:
-      NETWORK === 'MainNet'
-        ? '0x0926B2DB9D053E0022419093CCd57b92301fB736'
-        : '0xbdd265FC4D5b7E7a937608B91EDAFc38F27E4479',
-    decimals: NETWORK === 'MainNet' ? 8 : 18,
-  },
-};
+
 export const UNI_LP_TOKEN: Token = {
   assetID:
     NETWORK === 'MainNet'
@@ -285,41 +268,154 @@ export const USD_TOKENS: Token[] = [
         : 'https://img.o3.network/logo/heco/0x77e8ebd5b2d7cd984e6ae05a809409c795bf9b04.png',
   },
 ];
-export const LP_TOKENS: Token[] = [
+export const WETH_TOKENS: Token[] = [
   {
     assetID:
-      NETWORK === 'MainNet'
-        ? '0x61415f9060b1a81bbda3b79baa11acd27cddd83d'
-        : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
-    symbol: 'LP',
+      NETWORK === 'MainNet' ? '' : '0xa2D7dfE65E9f1CF3F0d8feB3368673214422470e',
+    symbol: 'WETH',
     decimals: 18,
     amount: '0',
     chain: 'ETH',
-    logo: '/assets/images/tokens/lp-eth.png',
+    type: 'ERC-20',
+    logo:
+      NETWORK === 'MainNet'
+        ? `/assets/images/tokens/weth.png`
+        : `/assets/images/tokens/weth.png`,
   },
   {
     assetID:
-      NETWORK === 'MainNet'
-        ? '0xAEA207661e36F4f51468B0d8a0b78Da521FA9D36'
-        : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
-    symbol: 'LP',
+      NETWORK === 'MainNet' ? '' : '0x17A8FB58973a77804A2DfB22b410a2507cD97316',
+    symbol: NETWORK === 'MainNet' ? 'ETH' : 'WBNB',
     decimals: 18,
     amount: '0',
     chain: 'BSC',
-    logo: '/assets/images/tokens/lp-bsc.png',
+    type: 'BEP-20',
+    logo:
+      NETWORK === 'MainNet'
+        ? `/assets/images/tokens/eth.png`
+        : `/assets/images/tokens/eth.png`,
   },
   {
     assetID:
-      NETWORK === 'MainNet'
-        ? '0x2Ec96Bb06E6af8C8Ac20f93C34ea2ab663E40d62'
-        : '0x74a7f2a3afa8b0cb577985663b5811901a860619',
-    symbol: 'LP',
+      NETWORK === 'MainNet' ? '' : '0xA2e5EF072e1287626B2e51DB4FD23b051de6FA03',
+    symbol: NETWORK === 'MainNet' ? 'HUSD' : 'WHT',
     decimals: 18,
     amount: '0',
     chain: 'HECO',
-    logo: '/assets/images/tokens/lp-heco.png',
+    type: 'HRC-20',
+    logo:
+      NETWORK === 'MainNet'
+        ? `/assets/images/tokens/eth.png`
+        : `/assets/images/tokens/eth.png`,
   },
 ];
+export const LP_TOKENS = {
+  1: [
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? '0x61415f9060b1a81bbda3b79baa11acd27cddd83d'
+          : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
+      symbol: 'LP',
+      decimals: 18,
+      amount: '0',
+      chain: 'ETH',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? '0xAEA207661e36F4f51468B0d8a0b78Da521FA9D36'
+          : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
+      symbol: 'LP',
+      decimals: 18,
+      amount: '0',
+      chain: 'BSC',
+      logo: '/assets/images/tokens/lp-bsc.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? '0x2Ec96Bb06E6af8C8Ac20f93C34ea2ab663E40d62'
+          : '0x74a7f2a3afa8b0cb577985663b5811901a860619',
+      symbol: 'LP',
+      decimals: 18,
+      amount: '0',
+      chain: 'HECO',
+      logo: '/assets/images/tokens/lp-heco.png',
+    },
+  ],
+  2: [
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x8E083cD392a08e17923cd39Ca538C84f3366b67A',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'ETH',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x80ce209d8459f07B32A4Fd83Bf91A747A6084602',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'BSC',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x6de81F457077C9c58ac1C08ea6eA98C17d1AfFa8',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'HECO',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+  ],
+  3: [
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x8E083cD392a08e17923cd39Ca538C84f3366b67A',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'ETH',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x80ce209d8459f07B32A4Fd83Bf91A747A6084602',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'BSC',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? ''
+          : '0x6de81F457077C9c58ac1C08ea6eA98C17d1AfFa8',
+      symbol: 'LP-ETH',
+      decimals: 18,
+      amount: '0',
+      chain: 'HECO',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+  ],
+};
 //#endregion
 
 //#region chain tokens

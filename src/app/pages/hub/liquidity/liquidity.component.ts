@@ -26,10 +26,16 @@ import {
 } from '@lib';
 import BigNumber from 'bignumber.js';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterEvent,
+} from '@angular/router';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ApproveDrawerComponent, ApproveModalComponent } from '@shared';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { POOL_LIST } from 'src/app/_lib/pool';
 
 type LiquidityType = 'add' | 'remove';
 interface State {
@@ -49,13 +55,14 @@ export class LiquidityComponent implements OnInit, OnDestroy {
   public addLiquidityTokens: Token[] = JSON.parse(JSON.stringify(USD_TOKENS));
   public liquidityType: LiquidityType = 'add';
 
-  public LPToken: Token = LP_TOKENS.find((item) => item.chain === 'ETH');
+  public LPToken: Token = LP_TOKENS[1].find(
+    (item) => item.chain === 'ETH'
+  ) as Token;
   public LPStaked = '--';
   public LPEarned = '--';
   public LPTokenMoney = '--';
   public LPStakedMoney = '--';
   public LPEarnedMoney = '--';
-  private isCanClick = true;
 
   public addLiquidityInputAmount = [];
   public removeLiquidityInputAmount = [];
@@ -68,6 +75,8 @@ export class LiquidityComponent implements OnInit, OnDestroy {
   public showAddPolyFee: boolean[] = [false, false, false];
   public showRemovePolyFee: boolean[] = [false, false, false];
 
+  public poolId = 1;
+  public pool = POOL_LIST[this.poolId];
   private swapUnScribe: Unsubscribable;
   private swap$: Observable<any>;
   public ethAccountAddress: string;
@@ -100,6 +109,7 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     public store: Store<State>,
     private nzMessage: NzMessageService,
     private router: Router,
+    private aRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private modal: NzModalService,
     private drawerService: NzDrawerService,
@@ -114,6 +124,7 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     this.swap$ = store.select('swap');
     this.rates$ = store.select('rates');
     this.app$ = store.select('app');
+    this.initPool();
     this.addLiquidityTokens.forEach((item) => {
       this.addLiquidityInputAmount.push('');
       this.removeLiquidityInputAmount.push('');
@@ -161,6 +172,17 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     if (this.appUnScribe) {
       this.appUnScribe.unsubscribe();
     }
+  }
+
+  private initPool(): void {
+    this.poolId = Number(this.aRoute.snapshot.queryParamMap.get('poolId'));
+    this.pool = POOL_LIST.find((item) => item.poolId === this.poolId);
+    this.LPToken = LP_TOKENS[this.poolId].find(
+      (item) => item.chain === this.pool.chain
+    );
+    this.addLiquidityTokens = JSON.parse(
+      JSON.stringify(this.pool.wrappedTokens)
+    );
   }
 
   changeLiquidityType(params: LiquidityType): void {
@@ -259,12 +281,12 @@ export class LiquidityComponent implements OnInit, OnDestroy {
   }
 
   async depost(token: Token, index: number): Promise<void> {
-    if (this.checkWalletConnect(token) === false) {
-      return;
-    }
-    if (this.ethApiService.checkNetwork(token) === false) {
-      return;
-    }
+    // if (this.checkWalletConnect(token) === false) {
+    //   return;
+    // }
+    // if (this.ethApiService.checkNetwork(token) === false) {
+    //   return;
+    // }
     if (this.isSwapCanClick) {
       this.isSwapCanClick = false;
       setTimeout(() => {
@@ -284,14 +306,14 @@ export class LiquidityComponent implements OnInit, OnDestroy {
     }
     const tokenBalance = new BigNumber(token.amount);
     const tokenAmount = new BigNumber(this.addLiquidityInputAmount[index]);
-    if (tokenAmount.isNaN() || tokenAmount.comparedTo(0) <= 0) {
-      this.nzMessage.error(MESSAGE.WrongInput[this.lang]);
-      return;
-    }
-    if (tokenBalance.comparedTo(tokenAmount) < 0) {
-      this.nzMessage.error(MESSAGE.InsufficientBalance[this.lang]);
-      return;
-    }
+    // if (tokenAmount.isNaN() || tokenAmount.comparedTo(0) <= 0) {
+    //   this.nzMessage.error(MESSAGE.WrongInput[this.lang]);
+    //   return;
+    // }
+    // if (tokenBalance.comparedTo(tokenAmount) < 0) {
+    //   this.nzMessage.error(MESSAGE.InsufficientBalance[this.lang]);
+    //   return;
+    // }
     this.loader = this.commonService.loading(TransactionType.deposit, {
       symbol1: token.symbol,
       symbol2: this.LPToken.symbol,
@@ -330,7 +352,8 @@ export class LiquidityComponent implements OnInit, OnDestroy {
         this.getFromTokenAddress(token),
         SWAP_CONTRACT_CHAIN_ID[this.LPToken.chain],
         amountOut,
-        this.addPolyFee[index]
+        this.addPolyFee[index],
+        this.poolId
       )
       .then((res) => {
         this.commonService.log(res);
@@ -347,14 +370,6 @@ export class LiquidityComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.ethApiService.checkNetwork(this.LPToken) === false) {
-      return;
-    }
-    if (this.isSwapCanClick) {
-      this.isSwapCanClick = false;
-      setTimeout(() => {
-        this.isSwapCanClick = true;
-      }, 4000);
-    } else {
       return;
     }
     const lpBalance = new BigNumber(this.LPToken.amount);
@@ -414,7 +429,8 @@ export class LiquidityComponent implements OnInit, OnDestroy {
         this.getFromTokenAddress(this.LPToken),
         SWAP_CONTRACT_CHAIN_ID[token.chain],
         amountOut,
-        this.removePolyFee[index]
+        this.removePolyFee[index],
+        this.poolId
       )
       .then((res) => {
         this.commonService.log(res);
@@ -595,14 +611,14 @@ export class LiquidityComponent implements OnInit, OnDestroy {
   }
   private getTokenPrice(token: Token): string {
     if (
-      LP_TOKENS.filter((item) => {
+      LP_TOKENS[this.poolId].filter((item) => {
         return this.commonService.judgeAssetHash(token.assetID, item.assetID);
       }).length > 0
     ) {
       return this.commonService.getAssetRateByHash(
         this.rates,
-        USD_TOKENS[0].assetID,
-        USD_TOKENS[0].chain
+        this.pool.wrappedTokens[0].assetID,
+        this.pool.wrappedTokens[0].chain
       );
     }
     return this.commonService.getAssetRateByHash(

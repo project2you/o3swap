@@ -58,7 +58,7 @@
         <div class="tabs tabs-remove" [ngClass]="{removeActive: liquidityType === 'remove'}"
           [routerLink]="['/hub/liquidity', 'remove']">
           <span>{{ 'RemoveLiquidity' | translate: lang:langPageName }}</span>
-          <a routerLink="/hub/legacy-liquidity/remove" nz-tooltip
+          <a *ngIf="poolId === 1" routerLink="/hub/legacy-liquidity/remove" [queryParams]="{poolId: poolId}" nz-tooltip
             [nzTooltipTitle]="'LegacyLPTip' | translate: lang:'liquidity'" nzTooltipPlacement="top">
             <button class="legacy-lp">
               <img class="to-legacy" src="/assets/images/bridge-liquidity/to-legacy.png" alt="">
@@ -122,8 +122,9 @@
                         {{ hecoAccountAddress | shortAddress: '10' }}
                       </span>
                     </p>
-                    <p>{{ 'To' | translate: lang:'swap' }}:<span><img src="/assets/images/swap-chains/ETH.png" alt="">
-                        {{ ethAccountAddress | shortAddress: '10' }}</span></p>
+                    <p>{{ 'To' | translate: lang:'swap' }}:<span><img
+                          [src]="'/assets/images/swap-chains/'+ pool.chain  +'.png'" alt="">
+                        {{ bscAccountAddress | shortAddress: '10' }}</span></p>
                   </div>
                 </div>
               </div>
@@ -170,7 +171,7 @@
                 </div>
                 <div class="poly-fee" *ngIf="showRemovePolyFee[i]">
                   <p>{{ 'PolyFee' | translate: lang:'swap' }}:<span *ngIf="removePolyFee[i]">{{ removePolyFee[i] }}
-                      ETH</span></p>
+                      {{ SOURCE_TOKEN_SYMBOL[pool.chain] }}</span></p>
                   <div class="address">
                     <p>{{ 'From' | translate: lang:'swap' }}:
                       <span><img src="/assets/images/swap-chains/ETH.png" alt="">
@@ -333,7 +334,8 @@
                         {{ hecoAccountAddress | shortAddress: '10' }}
                       </span>
                     </p>
-                    <p>{{ 'To' | translate: lang:'swap' }}:<span><img src="/assets/images/swap-chains/ETH.png" alt="">
+                    <p>{{ 'To' | translate: lang:'swap' }}:<span><img
+                          [src]="'/assets/images/swap-chains/'+ pool.chain  +'.png'" alt="">
                         {{ ethAccountAddress | shortAddress: '10' }}</span></p>
                   </div>
                 </div>

@@ -1,27 +1,27 @@
 <div class="container">
   <div class="left">
     <p class="total-balance">
-      USDT+BUSD+HUSD:
+      {{ ETHWrappedToken.symbol }}+{{BSCWrappedToken.symbol}}+{{HECOWrappedToken.symbol}}:
       <span class="value">
-        <app-long-balance [balance]="pusdtBalance.ALL" [decimals]="2"></app-long-balance>
+        <app-long-balance [balance]="poolAssetBalance.ALL" [decimals]="2"></app-long-balance>
       </span>
     </p>
     <ul class="usdt-balance">
       <li class="balance-item">
         <div class="item-logo">
-          <img class="logo" [src]="USDTToken.logo" alt="">
+          <img class="logo" [src]="ETHWrappedToken.logo" alt="">
           <img class="token-type" src="/assets/images/bridge-liquidity/erc20.png" alt="">
         </div>
         <div class="balance-right">
           <p class="balance-desc">
-            USDT:
+            {{ ETHWrappedToken.symbol }}:
             <span class="value">
-              <app-long-balance [balance]="pusdtBalance.ETH.value" [decimals]="2"></app-long-balance>
+              <app-long-balance [balance]="poolAssetBalance.ETH.value" [decimals]="2"></app-long-balance>
             </span>
-            <span class="percentage">&nbsp;({{ pusdtBalance.ETH.percentage }}%)</span>
+            <span class="percentage">&nbsp;({{ poolAssetBalance.ETH.percentage }}%)</span>
           </p>
           <div class="progress-container">
-            <nz-progress class="progress" [nzPercent]="pusdtBalance.ETH.percentage" [nzShowInfo]="false"
+            <nz-progress class="progress" [nzPercent]="poolAssetBalance.ETH.percentage" [nzShowInfo]="false"
               nzStrokeWidth="6" nzStrokeColor="#46B069">
             </nz-progress>
           </div>
@@ -29,19 +29,19 @@
       </li>
       <li class="balance-item">
         <div class="item-logo">
-          <img class="logo" [src]="BUSDToken.logo" alt="">
+          <img class="logo" [src]="BSCWrappedToken.logo" alt="">
           <img class="token-type" src="/assets/images/bridge-liquidity/bep20.png" alt="">
         </div>
         <div class="balance-right">
           <p class="balance-desc">
-            BUSD:
+            {{ BSCWrappedToken.symbol }}:
             <span class="value">
-              <app-long-balance [balance]="pusdtBalance.BSC.value" [decimals]="2"></app-long-balance>
+              <app-long-balance [balance]="poolAssetBalance.BSC.value" [decimals]="2"></app-long-balance>
             </span>
-            <span class="percentage">&nbsp;({{ pusdtBalance.BSC.percentage }}%)</span>
+            <span class="percentage">&nbsp;({{ poolAssetBalance.BSC.percentage }}%)</span>
           </p>
           <div class="progress-container">
-            <nz-progress class="progress" [nzPercent]="pusdtBalance.BSC.percentage" [nzShowInfo]="false"
+            <nz-progress class="progress" [nzPercent]="poolAssetBalance.BSC.percentage" [nzShowInfo]="false"
               nzStrokeWidth="6" nzStrokeColor="#46B069">
             </nz-progress>
           </div>
@@ -49,19 +49,19 @@
       </li>
       <li class="balance-item">
         <div class="item-logo">
-          <img class="logo" [src]="HUSDToken.logo" alt="">
+          <img class="logo" [src]="HECOWrappedToken.logo" alt="">
           <img class="token-type" src="/assets/images/bridge-liquidity/hrc20.png" alt="">
         </div>
         <div class="balance-right">
           <p class="balance-desc">
-            HUSD:
+            {{ HECOWrappedToken.symbol }}:
             <span class="value">
-              <app-long-balance [balance]="pusdtBalance.HECO.value" [decimals]="2"></app-long-balance>
+              <app-long-balance [balance]="poolAssetBalance.HECO.value" [decimals]="2"></app-long-balance>
             </span>
-            <span class="percentage">&nbsp;({{ pusdtBalance.HECO.percentage }}%)</span>
+            <span class="percentage">&nbsp;({{ poolAssetBalance.HECO.percentage }}%)</span>
           </p>
           <div class="progress-container">
-            <nz-progress class="progress" [nzPercent]="pusdtBalance.HECO.percentage" [nzShowInfo]="false"
+            <nz-progress class="progress" [nzPercent]="poolAssetBalance.HECO.percentage" [nzShowInfo]="false"
               nzStrokeWidth="6" nzStrokeColor="#46B069">
             </nz-progress>
           </div>

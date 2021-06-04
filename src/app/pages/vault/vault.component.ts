@@ -612,7 +612,7 @@ export class VaultComponent implements OnInit, OnDestroy {
       return resultPrice.toFixed();
     } else {
       if (
-        LP_TOKENS.filter((item) => {
+        LP_TOKENS[1].filter((item) => {
           return this.commonService.judgeAssetHash(token.assetID, item.assetID);
         }).length > 0
       ) {
