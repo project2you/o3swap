@@ -15,7 +15,7 @@ import {
   POLY_HOST,
   ETH_PUSDT_ASSET,
   SWAP_CONTRACT_CHAIN_ID,
-  POLY_HOST_ADDRESS,
+  POLY_POOL_ADDRESS,
   ETH_SOURCE_ASSET_HASH,
   INQUIRY_HOST,
   USD_TOKENS,
@@ -271,7 +271,8 @@ export class ApiService {
   getBridgeAmountOut(
     fromToken: Token,
     toToken: Token,
-    inputAmount: string
+    inputAmount: string,
+    poolId: number = 1
   ): Promise<string> {
     const fromPUsdt = ETH_PUSDT_ASSET[fromToken.chain].assetID;
     const toPUsdt = ETH_PUSDT_ASSET[toToken.chain].assetID;
@@ -281,7 +282,7 @@ export class ApiService {
     );
     return this.http
       .get(
-        `${POLY_HOST}/calcOutGivenIn/${POLY_HOST_ADDRESS}/${fromPUsdt}/${toPUsdt}/${amount}`
+        `${POLY_HOST}/calcOutGivenIn/${POLY_POOL_ADDRESS[poolId]}/${fromPUsdt}/${toPUsdt}/${amount}`
       )
       .pipe(
         map((res: any) => {
@@ -397,13 +398,17 @@ export class ApiService {
    * @param amount amount
    * @return Promise
    */
-  getPoolOutGivenSingleIn(fromToken: Token, amount: string): Promise<string> {
+  getPoolOutGivenSingleIn(
+    fromToken: Token,
+    amount: string,
+    poolId: number = 1
+  ): Promise<string> {
     const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
     const usdtLpToken = LP_TOKENS.find((item) => item.chain === 'ETH');
     amount = new BigNumber(amount).shiftedBy(fromToken.decimals).toFixed();
     return this.http
       .get(
-        `${POLY_HOST}/calcPoolOutGivenSingleIn/${POLY_HOST_ADDRESS}/${poolPUsdtHash}/${amount}`
+        `${POLY_HOST}/calcPoolOutGivenSingleIn/${POLY_POOL_ADDRESS[poolId]}/${poolPUsdtHash}/${amount}`
       )
       .pipe(
         map((res: any) => {
@@ -423,13 +428,17 @@ export class ApiService {
    * @param amount USDT amount
    * @return Promise Out
    */
-  getPoolInGivenSingleOut(fromToken: Token, amount: string): Promise<string> {
+  getPoolInGivenSingleOut(
+    fromToken: Token,
+    amount: string,
+    poolId: number = 1
+  ): Promise<string> {
     const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
     const usdtLpToken = LP_TOKENS.find((item) => item.chain === 'ETH');
     amount = new BigNumber(amount).shiftedBy(fromToken.decimals).toFixed();
     return this.http
       .get(
-        `${POLY_HOST}/calcPoolInGivenSingleOut/${POLY_HOST_ADDRESS}/${poolPUsdtHash}/${amount}`
+        `${POLY_HOST}/calcPoolInGivenSingleOut/${POLY_POOL_ADDRESS[poolId]}/${poolPUsdtHash}/${amount}`
       )
       .pipe(
         map((res: any) => {
@@ -449,13 +458,17 @@ export class ApiService {
    * @param amount LP amount
    * @return promise
    */
-  getSingleOutGivenPoolIn(fromToken: Token, amount: string): Promise<string> {
+  getSingleOutGivenPoolIn(
+    fromToken: Token,
+    amount: string,
+    poolId: number = 1
+  ): Promise<string> {
     const poolPUsdtHash = ETH_PUSDT_ASSET[fromToken.chain].assetID;
     const usdtToken = USD_TOKENS.find((item) => item.chain === fromToken.chain);
     amount = new BigNumber(amount).shiftedBy(18).toFixed();
     return this.http
       .get(
-        `${POLY_HOST}/calcSingleOutGivenPoolIn/${POLY_HOST_ADDRESS}/${poolPUsdtHash}/${amount}`
+        `${POLY_HOST}/calcSingleOutGivenPoolIn/${POLY_POOL_ADDRESS[poolId]}/${poolPUsdtHash}/${amount}`
       )
       .pipe(
         map((res: any) => {
@@ -469,9 +482,13 @@ export class ApiService {
       .toPromise();
   }
 
-  getPUsdtBalance(assetID: string, decimals: number): Promise<string> {
+  getPUsdtBalance(
+    assetID: string,
+    decimals: number,
+    poolId: number = 1
+  ): Promise<string> {
     return this.http
-      .get(`${POLY_HOST}/balance/${POLY_HOST_ADDRESS}/${assetID}`)
+      .get(`${POLY_HOST}/balance/${POLY_POOL_ADDRESS[poolId]}/${assetID}`)
       .pipe(
         map((res: any) => {
           if (res.code === 200) {
@@ -715,7 +732,8 @@ export class ApiService {
   private getFromEthCrossChainSwapPath(
     fromToken: Token,
     toToken: Token,
-    inputAmount: string
+    inputAmount: string,
+    poolId: number = 1
   ): Promise<AssetQueryResponse> {
     const fromPUsdt = ETH_PUSDT_ASSET[fromToken.chain].assetID;
     const toPUsdt = ETH_PUSDT_ASSET[toToken.chain].assetID;
@@ -725,7 +743,7 @@ export class ApiService {
     );
     return this.http
       .get(
-        `${POLY_HOST}/calcOutGivenIn/${POLY_HOST_ADDRESS}/${fromPUsdt}/${toPUsdt}/${amount}`
+        `${POLY_HOST}/calcOutGivenIn/${POLY_POOL_ADDRESS[poolId]}/${fromPUsdt}/${toPUsdt}/${amount}`
       )
       .pipe(
         map((res: any) => {

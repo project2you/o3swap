@@ -30,7 +30,7 @@
     .item-container.row-1 {
       flex-wrap: wrap;
       justify-content: space-between;
-      .item-group {
+      > .item-group {
         border-radius: 3px;
         width: calc(50% - 5px);
         margin: 0px 0px 20px 0px !important;
@@ -40,6 +40,27 @@
         }
         .group-content {
           font-size: 18px;
+        }
+      }
+      .end-box {
+        flex: 1;
+        margin: 0px 0px 20px 10px !important;
+        .chain-name-box {
+          width: 100%;
+          position: relative;
+          box-sizing: border-box;
+          border-radius: 3px;
+        }
+        .item-group {
+          width: 100%;
+          padding: 20px 15px 15px 15px;
+          border-radius: 3px;
+          .group-title {
+            font-size: 12px;
+          }
+          .group-content {
+            font-size: 18px;
+          }
         }
       }
       .item-total {

@@ -199,19 +199,23 @@ export const TOKEN_STAKING_TOKENS = {
   HECO: [],
 };
 
-export const LP_STAKING_TOKENS: Token[] = [
-  {
-    assetID:
-      NETWORK === 'MainNet'
-        ? '0x61415f9060b1a81bbda3b79baa11acd27cddd83d'
-        : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
-    symbol: 'USDT_LP',
-    decimals: 18,
-    amount: '0',
-    chain: 'ETH',
-    logo: '/assets/images/tokens/lp-eth.png',
-  },
-];
+export const LP_STAKING_TOKENS = {
+  ETH: [
+    {
+      assetID:
+        NETWORK === 'MainNet'
+          ? '0x61415f9060b1a81bbda3b79baa11acd27cddd83d'
+          : '0xd5d63dce45e0275ca76a8b2e9bd8c11679a57d0d',
+      symbol: 'USDT_LP',
+      decimals: 18,
+      amount: '0',
+      chain: 'ETH',
+      logo: '/assets/images/tokens/lp-eth.png',
+    },
+  ],
+  BSC: [],
+  HECO: [],
+};
 
 export const CONST_BRIDGE_TOKENS: Token[] = [
   {

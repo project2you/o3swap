@@ -45,6 +45,8 @@ interface State {
   styleUrls: ['./vault.component.scss', './mobile.scss'],
 })
 export class VaultComponent implements OnInit, OnDestroy {
+  showChainList = false;
+  chanList = ['ETH', 'BSC'];
   currentChain = 'ETH';
   langPageName = 'vault';
   langUnScribe: Unsubscribable;
@@ -79,7 +81,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   tokenStakingTokenList: any[] = TOKEN_STAKING_TOKENS[this.currentChain].filter(
     (item) => item.assetID !== O3_TOKEN.assetID
   );
-  lpstakingTokenList: any[] = LP_STAKING_TOKENS;
+  lpstakingTokenList: any[] = LP_STAKING_TOKENS[this.currentChain];
 
   private loader: NzModalRef = null;
   private getDataInterval: Unsubscribable;
@@ -709,7 +711,15 @@ export class VaultComponent implements OnInit, OnDestroy {
       });
     }
   }
-
+  selectChain(chain: string): void {
+    this.currentChain = chain;
+    this.o3StakingTokenList[0].chain = this.currentChain;
+    this.stakeUnlockTokenList = UNLOCK_LP_TOKENS[this.currentChain];
+    this.tokenStakingTokenList = TOKEN_STAKING_TOKENS[this.currentChain].filter(
+      (item) => item.assetID !== O3_TOKEN.assetID
+    );
+    this.lpstakingTokenList = LP_STAKING_TOKENS[this.currentChain];
+  }
   showCalculator(): void {
     if (!this.commonService.isMobileWidth()) {
       this.modal.create({
@@ -724,7 +734,6 @@ export class VaultComponent implements OnInit, OnDestroy {
       });
     }
   }
-
   calculateUnlockStake(): string {
     const lockNum = new BigNumber(this.o3Locked);
     const standerBalnce = new BigNumber(300000);

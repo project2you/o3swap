@@ -51,10 +51,12 @@ export const SWAP_CONTRACT_CHAIN_ID = {
   ETH: NETWORK === 'MainNet' ? 2 : 2,
 };
 
-export const POLY_HOST_ADDRESS =
-  NETWORK === 'MainNet'
-    ? '0xa6157DaBDda80F8c956962AB7739f17F54BAAB7F'
-    : '0x0687e6392de735B83ed2808797c92051B5dF5618';
+export const POLY_POOL_ADDRESS = {
+  1:
+    NETWORK === 'MainNet'
+      ? '0xa6157DaBDda80F8c956962AB7739f17F54BAAB7F'
+      : '0x0687e6392de735B83ed2808797c92051B5dF5618',
+};
 
 export const AGGREGATOR_CONTRACT = {
   BSC: {

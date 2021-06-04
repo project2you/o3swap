@@ -1,7 +1,7 @@
 <section class="page-container">
   <div class="detail">
     <div class="item-container row-1">
-      <div class="item-group item-total" [ngClass]="{eth: currentChain ==='ETH'}">
+      <div class="item-group item-total" [ngClass]="{eth: currentChain ==='ETH', bsc: currentChain ==='BSC'}">
         <div class="group-title">{{ 'Total' | translate: lang:langPageName }}</div>
         <div class="group-content"><span>
             <app-long-balance [balance]="o3Total || '--'" [decimals]="2">
@@ -19,13 +19,30 @@
           </span> O3</div>
         <!-- <div class="btn-primary receive-btn">Receive</div> -->
       </div>
-      <div class="item-group">
-        <div class="group-title">{{ 'TotalProfit' | translate: lang:langPageName }}</div>
-        <div class="group-content"><span>
-            <app-long-balance [balance]="totalProfit || '--'" [decimals]="2">
-            </app-long-balance>
-          </span> O3</div>
+      <div class="end-box">
+        <div class="chain-name-box" (mouseenter)="showChainList = true" (mouseleave)="showChainList = false"
+          (click)="showChainList = true">
+          <div class="item-group chain-name"
+            [ngClass]="{eth: currentChain ==='ETH', bsc: currentChain === 'BSC', active: true}">
+            {{ currentChain }} Chain
+            <img src="/assets/images/swap/arrow-down.png" alt="" class="arrow">
+          </div>
+          <ul *ngIf="showChainList" class="dropdown" (mouseenter)="showChainList = true"
+            (mouseleave)="showChainList = false" [ngClass]="{eth: currentChain ==='ETH', bsc: currentChain === 'BSC'}">
+            <li *ngFor="let chain of chanList" (click)="selectChain(chain)">
+              <span>{{ chain }} Chain</span>
+            </li>
+          </ul>
+        </div>
+        <div class=" item-group">
+          <div class="group-title">{{ 'TotalProfit' | translate: lang:langPageName }}</div>
+          <div class="group-content"><span>
+              <app-long-balance [balance]="totalProfit || '--'" [decimals]="2">
+              </app-long-balance>
+            </span> O3</div>
+        </div>
       </div>
+
     </div>
     <div *ngFor="let item of airdropO3; let i = index;">
       <section class="airdrop" *ngIf="item !== '0'">
